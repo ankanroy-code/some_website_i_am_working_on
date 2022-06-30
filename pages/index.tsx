@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -9,7 +9,7 @@ type props = {
   res: Welcome[];
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch("https://kontests.net/api/v1/all");
   const result = await res.json();
 
