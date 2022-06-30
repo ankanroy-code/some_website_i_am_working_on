@@ -24,10 +24,8 @@ export const Blog = ({ res }: props) => {
   return (
     <>
       {res.map((element, index) => (
-        <p>
-          <a key={index} href={element.url}>
-            {element.site}
-          </a>
+        <p key={index}>
+          <a href={element.url}>{element.site}</a>
         </p>
       ))}
     </>
