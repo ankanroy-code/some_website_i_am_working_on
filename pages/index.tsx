@@ -1,10 +1,40 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
 import styles from "../styles/Home.module.css";
+import { Welcome } from "../types";
 
-const Home: NextPage = () => {
+type props = {
+  res: Welcome[];
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch("https://kontests.net/api/v1/all");
+  const result = await res.json();
+
+  return {
+    props: {
+      res: result,
+    },
+  };
+};
+
+export const Blog = ({ res }: props) => {
+  return (
+    <>
+      {res.map((element, index) => (
+        <p>
+          <a key={index} href={element.url}>
+            {element.site}
+          </a>
+        </p>
+      ))}
+    </>
+  );
+};
+
+const Home: NextPage<props> = ({ res }: props): JSX.Element => {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,6 +44,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <Blog res={res} />
       </main>
 
       <footer className={styles.footer}>
