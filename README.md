@@ -1,1 +1,1 @@
-# Event i dont know what this reapo is
+# Event i dont know what this repo is
