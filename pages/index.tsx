@@ -1,17 +1,48 @@
-import type { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { useState } from "react";
 
 import styles from "../styles/Home.module.css";
-import { Welcome } from "../types";
+import { In24_Hours, Welcome } from "../types";
 
 type props = {
   res: Welcome[];
 };
 
+// TODO  move this to lib folder
+const shuffleArray = (array: Array<any>) => {
+  let currentIndex: number = array.length;
+  let randomIndex: number;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+};
+
+// TODO  move this to lib folder
+export const filterElementIfNotHappeningIn24Hours = (array: Welcome[]) => {
+  let result: Welcome[] = [];
+
+  array.forEach((element: Welcome) => {
+    if (element.in_24_hours === In24_Hours.Yes) {
+      result.push(element);
+    }
+  });
+
+  return result;
+};
+
 export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch("https://kontests.net/api/v1/all");
-  const result = await res.json();
+  let resultJson = await res.json();
+  const result = filterElementIfNotHappeningIn24Hours(resultJson);
+  shuffleArray(result);
 
   return {
     props: {
@@ -20,15 +51,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export const Blog = ({ res }: props) => {
+// TODO move this to component folder
+export const EventCard = ({ res }: props) => {
+  const data: Welcome = res[0];
+
   return (
-    <>
-      {res.map((element, index) => (
-        <p key={index}>
-          <a href={element.url}>{element.site}</a>
-        </p>
-      ))}
-    </>
+    <a className={styles.card} href={data.url}>
+      <h3>{data.name}</h3>
+      <span className={styles.code}>start in less than 24_hrs</span>
+    </a>
   );
 };
 
@@ -42,7 +73,9 @@ const Home: NextPage<props> = ({ res }: props): JSX.Element => {
       </Head>
 
       <main className={styles.main}>
-        <Blog res={res} />
+        <span className={styles.title}>Take a Challenge</span>
+        <p className={styles.description}>just do it</p>
+        <EventCard res={res} />
       </main>
 
       <footer className={styles.footer}>
