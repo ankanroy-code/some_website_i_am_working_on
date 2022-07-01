@@ -58,7 +58,6 @@ export const EventCard = ({ res }: props) => {
   return (
     <a className={styles.card} href={data.url}>
       <h3>{data.name}</h3>
-      <span className={styles.code}>start in less than 24_hrs</span>
     </a>
   );
 };
@@ -74,7 +73,7 @@ const Home: NextPage<props> = ({ res }: props): JSX.Element => {
 
       <main className={styles.main}>
         <span className={styles.title}>Take a Challenge</span>
-        <p className={styles.description}>just do it</p>
+        <span className={styles.description}>all challenges provided start in less than 24hrs</span>
         <EventCard res={res} />
       </main>
 
